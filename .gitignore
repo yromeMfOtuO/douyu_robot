@@ -1,0 +1,4 @@
+venv/
+shell_script/
+.idea/
+douyu_config.json.backup

@@ -1,0 +1,22 @@
+{
+  "douyuCookies": {
+    "acf_did": "cookie 获取",
+    "acf_auth": "cookie 获取"
+  },
+  "giftConfig": {
+    "roomId": 417813,
+    "giftId": 268
+
+  },
+  "emailConfig": {
+    "sender": "qq邮箱",
+    "sender_name": "斗鱼机器人🤖",
+    "receivers": [
+      "qq邮箱"
+    ],
+    "recievers_name": "qq邮箱",
+    "smtpHost": "smtp.qq.com",
+    "smtpPort": 465,
+    "authCode": "qq邮箱授权码"
+  }
+}
