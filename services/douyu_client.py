@@ -1,5 +1,35 @@
 import json
 import requests
+from bs4 import BeautifulSoup
+
+
+class Medal:
+
+    def __init__(self, room, level, intimacy, rank, medal_name):
+        self.room = room
+        self.level = level
+        self.intimacy = intimacy
+        self.rank = rank
+        self.medal_name = medal_name
+
+
+class Gift:
+
+    def __init__(self, gift_id, gift_name, gift_count):
+        self.id = gift_id
+        self.name = gift_name
+        self.count = gift_count
+
+
+def __map_tr_2_medal__(tr):
+    return Medal(
+        tr.attrs['data-fans-room'],
+        tr.attrs['data-fans-level'],
+        tr.attrs['data-fans-intimacy'],
+        tr.attrs['data-fans-rank'],
+        tr.find('a', attrs={"data-bn": True}).attrs['data-bn']
+    )
+
 
 class DouyuClient:
     __headers = {
@@ -31,6 +61,7 @@ class DouyuClient:
             "acf_auth": self.__acf_auth  # 这个是关键 cookie
             # "dy_auth": "f781sCnUGCCC2RaIQTmC3JKmBB3FxRDLfrhC9R9PqFwSZJbhz%2BPzf8HCf9URxFaLzxgdIV38x2c%2FoeCqqAPr6NJr8Ey8rl4IhaBsUy3dmrzuUgF29G68s5MP"
         }
+        self.__gift_mapping = config.properties['giftMapping']
 
     def give_gifts(self, gift_id, gift_count=10):
         data = {
@@ -48,6 +79,29 @@ class DouyuClient:
             result = json.loads(response.text)
             if result['error'] != 0:
                 raise Exception(f"礼物赠送失败，失败原因：{result['msg']}")
+            return result
         except Exception as e:
             raise Exception(e)
 
+    def get_medals(self):
+        response = requests.get('https://www.douyu.com/member/cp/getFansBadgeList',
+                                headers=self.__headers, cookies=self.__cookies)
+        soup = BeautifulSoup(response.text, "html.parser")
+        return list(map(__map_tr_2_medal__, soup.find_all('tr', attrs={"data-fans-room": True})))
+
+    def __map__(self, tr):
+        return Gift(
+            self.__gift_mapping[tr.find_all('td')[0].find('span').attrs['data-name']],
+            tr.find_all('td')[0].find('span').attrs['data-name'],
+            int(tr.find_all('td')[1].string)
+        )
+
+    def __is_valid_gift__(self, tr):
+        return tr.find_all('td')[2].string == "正常"\
+               and tr.find_all('td')[0].find('span').attrs['data-name'] in self.__gift_mapping
+
+    def get_backpack_gifts(self):
+        response = requests.get('https://www.douyu.com/member/cp/prop',
+                                headers=self.__headers, cookies=self.__cookies)
+        trs = BeautifulSoup(response.text, "html.parser").find('tbody').find_all('tr')
+        return list(map(self.__map__, filter(self.__is_valid_gift__, trs)))

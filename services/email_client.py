@@ -34,10 +34,10 @@ class EmailClient:
             raise Exception("client initial error")
 
     def send(self, subject, content, receivers=None, recievers_name=None):
-        reciever_name = recievers_name if recievers_name else self.__recievers_name
+        receiver_name = recievers_name if recievers_name else self.__recievers_name
         message = MIMEText(content, 'plain', 'utf-8')
         message['From'] = Header(self.__sender_name, 'utf-8')  # 发送者
-        message['To'] = Header(reciever_name, 'utf-8')  # 接收者
+        message['To'] = Header(receiver_name, 'utf-8')  # 接收者
         message['Subject'] = Header(subject, 'utf-8')
 
         receiver = receivers if receivers else self.__receivers

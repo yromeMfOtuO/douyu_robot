@@ -7,8 +7,8 @@ class Config:
 
     def __init__(self) -> None:
         # 获取config_path，向上寻找两级目录
-        if os.path.exists('../douyu_config.json'):
-            config_path = '../douyu_config.json'
+        if os.path.exists('./douyu_config.json'):
+            config_path = './douyu_config.json'
         elif os.path.exists('../douyu_config.json'):
             config_path = '../douyu_config.json'
         elif os.path.exists('../../douyu_config.json'):
