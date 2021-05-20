@@ -15,10 +15,10 @@ class Medal:
 
 class Gift:
 
-    def __init__(self, gift_id, gift_name, gift_count):
+    def __init__(self, gift_id, gift_name, gift_amount):
         self.id = gift_id
         self.name = gift_name
-        self.count = gift_count
+        self.amount = gift_amount
 
 
 def __map_tr_2_medal__(tr):
@@ -63,10 +63,10 @@ class DouyuClient:
         }
         self.__gift_mapping = config.properties['giftMapping']
 
-    def give_gifts(self, gift_id, gift_count=10):
+    def give_gifts(self, gift_id, gift_amount=10):
         data = {
             'propId': gift_id,
-            'propCount': str(gift_count),
+            'propCount': str(gift_amount),
             'roomId': f"{self.__room_id}",
             'bizExt': '{"yzxq":{}}'  # 暂时未用到的参数
         }

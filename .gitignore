@@ -3,3 +3,4 @@ shell_script/
 .idea/
 douyu_config.*
 */__pycache__
+test.py

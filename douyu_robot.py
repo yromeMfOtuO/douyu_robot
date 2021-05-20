@@ -29,6 +29,7 @@ try:
             add_content(f"  {medal.medal_name}: https://www.douyu.com/{medal.room}")
 
 except Exception as e:
+    print(e)
     add_content("获取当前拥有的粉丝牌失败")
 
 try:
@@ -36,19 +37,25 @@ try:
     if gifts:
         add_content("当前拥有的背包礼物：")
         for gift in gifts:
-            add_content(f"  礼物 {gift.name} 数量为：{gift.count}")
+            add_content(f"  礼物 {gift.name} 数量为：{gift.amount}")
 except Exception as e:
-    add_content("获取当前拥有的背包礼物失败")
+    print(e)
+    add_content("获取当前拥有的背包礼物失败!!!")
 
 add_content("开始斗鱼礼物赠送：")
 
 if medals and gifts:
+    medal_amount = len(medals)
     for medal in medals:
         try:
-            gift = gifts[0]
-            douyu.give_gifts(gift.id, gift_count=gift.count)
-            add_content(f"  给 {medal.medal_name} 房间赠送{gift.name}成功~, 数量{gift.count}")
+            for index, gift in enumerate(gifts):
+                gift_count = gift.amount
+                amount = gift_count // medal_amount \
+                    if len(gifts) - 1 - index else gift_count // medal_amount + gift_count % medal_amount
+                douyu.give_gifts(gift.id, gift_amount=amount)
+                add_content(f"  给 {medal.medal_name} 房间赠送{gift.name}成功~, 数量{gift_count}")
         except Exception as e:
+            print(e)
             add_content("  给 {medal.medal_name} 房间赠送{gift.name}失败!!!")
 
 
