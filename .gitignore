@@ -2,3 +2,4 @@ venv/
 shell_script/
 .idea/
 douyu_config.*
+*/__pycache__
