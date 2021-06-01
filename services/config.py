@@ -33,7 +33,10 @@ class VisionConfig:
     """
     def __init__(self):
         try:
-            resp = requests.get("http://<ip>:<port>/client/config", params={"name": "douyu"})
+            resp = requests.get("http://<ip>:<port>/client/config",
+                                # 设置 http basic auth 参数
+                                auth=('<username>', "<password>"),
+                                params={"name": "douyu"})
             self.properties = json.loads(resp.content)['data']
             print(self.properties)
         except Exception as e:
