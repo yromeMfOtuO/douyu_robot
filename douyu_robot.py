@@ -1,8 +1,8 @@
-from services.config import Config
-from services.douyu_client import DouyuClient
-from os import linesep
 from datetime import datetime as date
+from os import linesep
 
+from services.config import VisionConfig
+from services.douyu_client import DouyuClient
 from services.email_client import EmailClient
 
 
@@ -11,7 +11,7 @@ def add_content(line):
     content = content.__add__(line).__add__(linesep)
 
 
-config = Config()
+config = VisionConfig()
 email = EmailClient(config)
 date_str = date.now().strftime('%Y-%m-%d')
 subject = f"斗鱼机器人🤖 {date_str} 执行报告"
