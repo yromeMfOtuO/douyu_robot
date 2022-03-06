@@ -9,7 +9,7 @@ import json
 import requests
 
 
-class IftttClient():
+class IftttClient:
     """
     ifttt 请求封装 client
     """

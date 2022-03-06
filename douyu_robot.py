@@ -33,7 +33,7 @@ except Exception as e:
     add_content("获取当前拥有的粉丝牌失败")
 
 try:
-    gifts = douyu.get_backpack_gifts()
+    gifts = douyu.get_backpack()
     if gifts:
         add_content("当前拥有的背包礼物：")
         for gift in gifts:

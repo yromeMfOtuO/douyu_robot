@@ -88,6 +88,9 @@ class DouyuClient:
 
 
     def give_gifts(self, gift_id, gift_amount=10):
+        """
+        赠送礼物
+        """
         data = {
             'propId': gift_id,
             'propCount': str(gift_amount),
@@ -108,6 +111,9 @@ class DouyuClient:
             raise Exception(e)
 
     def get_medals(self):
+        """
+        查询拥有的粉丝牌
+        """
         response = requests.get('https://www.douyu.com/member/cp/getFansBadgeList',
                                 headers=self.__headers, cookies=self.__cookies)
         soup = BeautifulSoup(response.text, "html.parser")
@@ -125,6 +131,9 @@ class DouyuClient:
                and tr.find_all('td')[0].find('span').attrs['data-name'] in self.__gift_mapping
 
     def get_backpack_gifts(self):
+        """
+        查询背包中的礼物
+        """
         response = requests.get('https://www.douyu.com/member/cp/prop',
                                 headers=self.__headers, cookies=self.__cookies)
         trs = BeautifulSoup(response.text, "html.parser").find('tbody').find_all('tr')
@@ -134,4 +143,5 @@ class DouyuClient:
 if __name__ == '__main__':
     config = VisionConfig()
     douyu = DouyuClient(config)
-    douyu.get_backpack()
+    gifts = douyu.get_backpack()
+    print(gifts)
