@@ -2,6 +2,8 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
+from services.config import VisionConfig
+
 
 class Medal:
 
@@ -63,6 +65,28 @@ class DouyuClient:
         }
         self.__gift_mapping = config.properties['giftMapping']
 
+    def get_backpack(self):
+        """
+        获取背包中的礼物
+        """
+        # 默认
+        params = (
+            ('rid', '417813'),
+        )
+        resp = requests.get(
+            'https://www.douyu.com/japi/prop/backpack/web/v1',
+            headers=self.__headers,
+            cookies=self.__cookies,
+            params=params,
+        )
+        if 'data' not in resp.json() or 'list' not in resp.json()['data']:
+            return []
+        return list(map(
+            lambda x: Gift(x['id'], x['name'], x['count']),
+            resp.json()['data']['list']
+        ))
+
+
     def give_gifts(self, gift_id, gift_amount=10):
         data = {
             'propId': gift_id,
@@ -105,3 +129,9 @@ class DouyuClient:
                                 headers=self.__headers, cookies=self.__cookies)
         trs = BeautifulSoup(response.text, "html.parser").find('tbody').find_all('tr')
         return list(map(self.__map__, filter(self.__is_valid_gift__, trs)))
+
+
+if __name__ == '__main__':
+    config = VisionConfig()
+    douyu = DouyuClient(config)
+    douyu.get_backpack()

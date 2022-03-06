@@ -1,0 +1,15 @@
+curl 'https://www.douyu.com/japi/prop/backpack/web/v1?rid=417813' \
+  -H 'authority: www.douyu.com' \
+  -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://www.douyu.com/417813' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'cookie: dy_did=573dfa3320daa0657151fdcd00081601; acf_did=573dfa3320daa0657151fdcd00081601; Hm_lvt_e99aee90ec1b2106afe7ec3b199020a7=1645878904; PHPSESSID=q1v4ngca4j08toklptumk3f7l7; acf_avatar=https%3A%2F%2Fapic.douyucdn.cn%2Fupload%2Favatar%2F022%2F19%2F19%2F35_avatar_; acf_auth=9fc9w%2F1j%2B0zR8paCS0DZb6UMfpkyzvhFwD7TJ4GxSRCh2Zlqnwi%2FjxnDZ5x8HhEz55%2BYUK%2FaFKXTZGVI06JvoxyV3EstrbVo3gWeNi3dTXiJ8V2h5aGDq06Q; dy_auth=5420HetYTV41AT7aap1k4a19bWr3fsI8BXBb9pCTlVko6H6fQfC%2BIt1yfwp7mf25f1rggjwqC5bosMzvbAxJoODK4HL0xaHv15sQpY1fSxfI0wkxPpXf5L0z; wan_auth37wan=627a8daa081ec3gpm5dbO4NjrDW4L0ytLJGqCkDQlayHNYPz8gWIRcwd1LMyfYbvukkVpumfrEE%2Fqw3sdvzzeEUXF5BMd38yJKiqiXl6quRr5zNQ7Q; acf_uid=22191935; acf_username=qq_d8UckaWl; acf_nickname=%E5%91%86%E5%91%86%E5%91%86%E5%91%86%E8%AF%97%E4%BA%BA; acf_own_room=0; acf_groupid=1; acf_phonestatus=1; acf_ct=0; acf_ltkid=44434603; acf_biz=1; acf_stk=cda6c318e2614bac; Hm_lpvt_e99aee90ec1b2106afe7ec3b199020a7=1646557992' \
+  --compressed
