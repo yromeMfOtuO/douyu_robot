@@ -1,9 +1,13 @@
 import json
+import time
+
 import requests
 from bs4 import BeautifulSoup
 
 from services.config import VisionConfig
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 class Medal:
 
@@ -55,21 +59,93 @@ class DouyuClient:
         self.__room_id = config.properties['giftConfig']['roomId']
         self.__acf_did = config.properties['douyuCookies']['acf_did']
         self.__acf_auth = config.properties['douyuCookies']['acf_auth']
+        self.__acf_uid = config.properties['douyuCookies']['acf_uid']
+        self.__acf_nickname = config.properties['douyuCookies']['acf_nickname']
         self.__headers['referer'] = f"https://www.douyu.com/{self.__room_id}"
         self.__cookies = {
             # "dy_did": "481f21aebf814b417b0242c300081501",
             "acf_did": self.__acf_did,
             # "PHPSESSID": "iil2s5p1kq13u1ij8jbpu1bab6",
-            "acf_auth": self.__acf_auth  # 这个是关键 cookie
+            "acf_auth": self.__acf_auth,  # 这个是关键 cookie
             # "dy_auth": "f781sCnUGCCC2RaIQTmC3JKmBB3FxRDLfrhC9R9PqFwSZJbhz%2BPzf8HCf9URxFaLzxgdIV38x2c%2FoeCqqAPr6NJr8Ey8rl4IhaBsUy3dmrzuUgF29G68s5MP"
         }
         self.__gift_mapping = config.properties['giftMapping']
+        # 某些事件触发例如 荧光棒获取 无法使用接口触发，需要通过浏览器触发
+        self.init_by_chrome()
+
+    def init_by_chrome(self):
+        chrome_cookies = [
+            {
+                "domain": "www.douyu.com",
+                "expires": 1962033612000,
+                "name": "acf_did",
+                "path": "/",
+                "secure": False,
+                "value": self.__acf_did
+            },
+            {
+                "domain": "www.douyu.com",
+                "expires": 1962033612000,
+                "name": "acf_auth",
+                "path": "/",
+                "secure": False,
+                "value": self.__acf_auth
+            },
+            {
+                "domain": "www.douyu.com",
+                "expires": 1647202813089,
+                "name": "acf_uid",
+                "path": "/",
+                "secure": False,
+                "value": self.__acf_uid
+            },
+            {
+                "domain": "www.douyu.com",
+                "expires": 1647202813089,
+                "name": "acf_nickname",
+                "path": "/",
+                "secure": False,
+                "value": self.__acf_nickname
+            },
+        ]
+        chrome_options = Options()
+        # chrome_options.add_argument('--headless') # 不打开图形化界面
+        # chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        browser = webdriver.Chrome(chrome_options=chrome_options)
+        # 先访问主页缓存cookie的domain
+        browser.get("https://www.douyu.com")
+        # 添加cookie
+        for cookie in chrome_cookies:
+            browser.add_cookie(cookie)
+        # 访问页面并等待页面加载完成
+        browser.get("https://www.douyu.com/417813")
+        time.sleep(60) # 页面加载较慢
+
+    def get_gifts(self):
+        # 是否是获取礼物的接口？
+        res = requests.get(
+            url='https://www.douyu.com/lapi/interact/quiz/quizStartAuthority?room_id=74751&cate2_id=928&uid=22191935&is_anchor=0&is_manager=0&t=',
+            cookies=self.__cookies,
+            headers=self.__headers,
+        )
+        resp = requests.post(
+            url='https://www.douyu.com/member/prop/query',
+            params = (
+                ('rid', '417813'),
+            ),
+            cookies=self.__cookies,
+            headers=self.__headers,
+        )
+        print(resp.json())
+        return resp.json()
 
     def get_backpack(self):
         """
-        获取背包中的礼物
+        获取背包中的礼物，需要先使用chrome打开页面，以触发每日礼物的赠送
         """
-        # 默认
+        # 默认房间号
         params = (
             ('rid', '417813'),
         )
@@ -85,7 +161,6 @@ class DouyuClient:
             lambda x: Gift(x['id'], x['name'], x['count']),
             resp.json()['data']['list']
         ))
-
 
     def give_gifts(self, gift_id, gift_amount=10):
         """
@@ -141,7 +216,9 @@ class DouyuClient:
 
 
 if __name__ == '__main__':
-    config = VisionConfig()
-    douyu = DouyuClient(config)
+    c = VisionConfig()
+    douyu = DouyuClient(c)
     gifts = douyu.get_backpack()
+    # gifts = douyu.get_gifts()
     print(gifts)
+
